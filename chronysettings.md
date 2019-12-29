@@ -1,6 +1,7 @@
 ## Prometheus/Grafana and Chrony Tuning Guide for Cardano Stake Pool Operators
 
 ###### Shout out and thank you goes out to @ilap for his first mention of time synchronized drift.
+https://gist.github.com/ilap/54027fe9af0513c2701dc556221198b2
 
 ### Pre-Requisites
 
