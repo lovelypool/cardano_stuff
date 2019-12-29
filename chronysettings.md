@@ -8,11 +8,13 @@ https://gist.github.com/ilap/54027fe9af0513c2701dc556221198b2
 ##### You must install and run the following software on your node:
   - **Jormungandr** (v0.8.5 is the latest as of last article edit) (accessible globally in your $PATH)
   - **JCLI** (accessible globally in your $PATH)
-  - **Prometheus** (wget the links from here in terminal, extract and run binary https://prometheus.io/download/)
+  - **Prometheus** (https://prometheus.io/download/)
   - **Prometheus Node Exporter** (download form above link, search node exporter)
   - **Grafana** (https://grafana.com/grafana/download)
   - Download the **monitoring repo** from the **IOHK jormungandr-nix repo**:  https://github.com/input-output-hk/jormungandr-nix/tree/master/nixos/jormungandr-monitor
   - **Chrony** (sudo apt-get install chrony)
+
+***For Prometheus, Prometheus Node Exporter, and Grafana, just wget the tar files from the links from above in your terminal, extract and run the binarys to start each server.***
 
 ### Quick Setup
 Note - you do not need to install the jormungandr datasource to tune your time synchronized drift.  You may ignore all jormungandr related information if all you want to do is experiment with time drift.  Adding the jormungandr datasource allows you to also monitor and log your node stats, such as uptime and block height, into a time series database for review in the future.
