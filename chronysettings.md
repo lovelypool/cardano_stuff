@@ -39,6 +39,11 @@ You can now enter 127.0.0.1:3001 to access Grafana web server from your local we
 
 4. The Prometheus Node Exporter is the service that provides the "Time Synchronized Drift" data.
 
+![Drift Result Image](https://raw.githubusercontent.com/lovelypool/cardano_stuff/master/drift1.png)
+
+You can find import the Grafana dashboard that has this graph for Node Exporter by importing this into Grafana: https://grafana.com/grafana/dashboards/1860
+
+
 5. Make sure you can see your jormungandr job and node_exporter job "Targets" in the Prometheus dashboard (port 9090), under Status->Targets.  It may take 15 seconds to appear upon starting Prometheus, as that is the default "scrape rate" for data collection.
 [picture to come soon]
 
@@ -75,6 +80,8 @@ makestep 0.1 3
 After experimenting with these settings, it looks like we need to make some modifications.  The time synchronized drift is pretty good (20-50msec) at the start, but over time, the slew rate of the time correction changes, and your time drift will slowly get worse and worse again until its back to where it was before we made any correction.
 
 This seemed very irregular and I wanted to try and understand what was the cause and to fix it so we can get latency <10msec.
+
+![Drift Result Image](https://raw.githubusercontent.com/lovelypool/cardano_stuff/master/drift2.png)
 
 First, run the command:
 ```
@@ -146,4 +153,8 @@ local stratum 10
 
 The results are excellent!!
 
-[pictures to come]
+![Drift Result Image](https://raw.githubusercontent.com/lovelypool/cardano_stuff/master/drift3.png)
+
+We are now stable at 7.5ms with a nice even synchronization period!
+
+![Drift Result Image2](https://raw.githubusercontent.com/lovelypool/cardano_stuff/master/drift4.png)
