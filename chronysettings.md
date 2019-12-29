@@ -32,10 +32,10 @@ Note - you do not need to install the jormungandr datasource to tune your time s
 
 3. If you are running this on a server w/ terminal only access, you will need to SSH tunnel into your server's web server ports in order to access the grafana webpage on your local machine:
 ```
-ssh -N -L PORT2TUNNEL:127.0.0.1:PORT2TUNNEL root@serveripaddress
+ssh -N -L PORT2TUNNEL:127.0.0.1:PORT2TUNNEL user@serveripaddress
 
 Example for grafana (port 3000 is default, change to 3001 so it doesnt collide with Jormungandr default port)
-ssh -N -L 3001:127.0.0.1:3001 root@serveripaddress
+ssh -N -L 3001:127.0.0.1:3001 user@111.111.111.111
 
 You can now enter 127.0.0.1:3001 to access Grafana web server from your local web browser
 ```
