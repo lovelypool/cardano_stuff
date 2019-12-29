@@ -108,10 +108,7 @@ On average, the pools from Ubuntu and the .gov/.org servers were giving me 20-60
 ***iburst*** means that chrony will try to synchronize to the time servers very fast at the beginning, but will over time get slower and slower if no polling rate is set.  So, we make the following modifications to set a constant min and max polling rate, as well as allow synchronization on any clock cycle, and not just at the start of chronyd:
 
 ```
-#pool ntp.ubuntu.com        iburst maxsources 3
 pool time.google.com       iburst minpoll 1 maxpoll 2 maxsources 3
-#pool time.nist.giv         iburst maxsources 3
-#pool us.pool.ntp.org       iburst maxsources 3
 
 # Step the system clock instead of slewing it if the adjustment is larger than
 # one second, on any clock update (-1)    // (3) in the first three clock updates.
@@ -121,8 +118,8 @@ makestep 0.1 -1
 A few more modifications were added.  Here is my complete chrony.conf file:
 
 ```
-# ool ntp.ubuntu.com        iburst maxsources 3
 pool time.google.com       iburst minpoll 1 maxpoll 2 maxsources 3
+# pool ntp.ubuntu.com        iburst maxsources 3
 # pool time.nist.giv         iburst maxsources 3
 # pool us.pool.ntp.org       iburst maxsources 3
 
