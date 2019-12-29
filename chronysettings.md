@@ -2,7 +2,7 @@
 
 ###### Shout out and thank you goes out to @ilap for his first mention of time synchronized drift.
 
-###Pre-Requisites
+### Pre-Requisites
 
 ##### You must install and run the following software on your node:
   - **Jormungandr** (v0.8.5 is the latest as of last article edit) (accessible globally in your $PATH)
@@ -13,7 +13,7 @@
   - Download the **monitoring repo** from the **IOHK jormungandr-nix repo**:  https://github.com/input-output-hk/jormungandr-nix/tree/master/nixos/jormungandr-monitor
   - **Chrony** (sudo apt-get install chrony)
 
-###Quick Setup
+### Quick Setup
 Note - you do not need to install the jormungandr datasource to tune your time synchronized drift.  You may ignore all jormungandr related information if all you want to do is experiment with time drift.  Adding the jormungandr datasource allows you to also monitor and log your node stats, such as uptime and block height, into a time series database for review in the future.
 
 1. Your Prometheus YAML config file needs to include the following for the new "jormungandr" datasource, as well as the "node exporter" data source
