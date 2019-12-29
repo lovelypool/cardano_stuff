@@ -3,6 +3,9 @@
 ###### Shout out and thank you goes out to @ilap for his first mention of time synchronized drift.
 https://gist.github.com/ilap/54027fe9af0513c2701dc556221198b2
 
+##### To skip the reading part :), you can just download this chrony.conf file and use it in place of yours located in /etc/chrony/chrony.conf   
+https://github.com/lovelypool/cardano_stuff/blob/master/chrony.conf
+
 ### Pre-Requisites
 
 ##### You must install and run the following software on your node:
