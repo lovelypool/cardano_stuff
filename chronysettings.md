@@ -106,7 +106,7 @@ pool time.google.com       iburst minpoll 1 maxpoll 2 maxsources 3
 #pool us.pool.ntp.org       iburst maxsources 3
 
 # Step the system clock instead of slewing it if the adjustment is larger than
-# one second, on any clock update (-1)    // (3) in the first three clock updates.
+# 0.1 second, on any clock update (-1)    // (3) in the first three clock updates.
 makestep 0.1 -1
 ```
 
@@ -140,7 +140,7 @@ maxupdateskew 5.0
 rtcsync
 
 # Step the system clock instead of slewing it if the adjustment is larger than
-# one second, but only in the first three clock updates.
+# 0.1 seconds, on any clock update.
 makestep 0.1 -1
 
 # Get TAI-UTC offset and leap seconds from the system tz database.
