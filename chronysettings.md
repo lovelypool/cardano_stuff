@@ -154,7 +154,7 @@ leapsectz right/UTC
 # Serve time even if not synchronized to a time source.
 local stratum 10
 ```
-####Make sure to run the following after editing your chrony config file:
+#### Make sure to run the following after editing your chrony config file:
 ```
 systemctl restart chronyd
 ```
