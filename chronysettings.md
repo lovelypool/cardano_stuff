@@ -1,20 +1,17 @@
 ## Prometheus/Grafana and Chrony Tuning Guide for Cardano Stake Pool Operators
 
 ###### Shout out and thank you goes out to @ilap for his first mention of time synchronized drift.
-https://gist.github.com/ilap/54027fe9af0513c2701dc556221198b2
 
 ### Pre-Requisites
 
 ##### You must install and run the following software on your node:
   - **Jormungandr** (v0.8.5 is the latest as of last article edit) (accessible globally in your $PATH)
   - **JCLI** (accessible globally in your $PATH)
-  - **Prometheus** (https://prometheus.io/download/)
+  - **Prometheus** (wget the links from here in terminal, extract and run binary https://prometheus.io/download/)
   - **Prometheus Node Exporter** (download form above link, search node exporter)
   - **Grafana** (https://grafana.com/grafana/download)
   - Download the **monitoring repo** from the **IOHK jormungandr-nix repo**:  https://github.com/input-output-hk/jormungandr-nix/tree/master/nixos/jormungandr-monitor
   - **Chrony** (sudo apt-get install chrony)
-
-For Prometheus, Prometheus Node Exporter, and Grafana, just wget the tar files from the links from above in your terminal, extract and run the binarys to start each server.
 
 ### Quick Setup
 Note - you do not need to install the jormungandr datasource to tune your time synchronized drift.  You may ignore all jormungandr related information if all you want to do is experiment with time drift.  Adding the jormungandr datasource allows you to also monitor and log your node stats, such as uptime and block height, into a time series database for review in the future.
@@ -32,10 +29,10 @@ Note - you do not need to install the jormungandr datasource to tune your time s
 
 3. If you are running this on a server w/ terminal only access, you will need to SSH tunnel into your server's web server ports in order to access the grafana webpage on your local machine:
 ```
-ssh -N -L PORT2TUNNEL:127.0.0.1:PORT2TUNNEL user@serveripaddress
+ssh -N -L PORT2TUNNEL:127.0.0.1:PORT2TUNNEL root@serveripaddress
 
 Example for grafana (port 3000 is default, change to 3001 so it doesnt collide with Jormungandr default port)
-ssh -N -L 3001:127.0.0.1:3001 user@111.111.111.111
+ssh -N -L 3001:127.0.0.1:3001 root@serveripaddress
 
 You can now enter 127.0.0.1:3001 to access Grafana web server from your local web browser
 ```
@@ -109,7 +106,7 @@ pool time.google.com       iburst minpoll 1 maxpoll 2 maxsources 3
 #pool us.pool.ntp.org       iburst maxsources 3
 
 # Step the system clock instead of slewing it if the adjustment is larger than
-# 0.1 second, on any clock update (-1)    // (3) in the first three clock updates.
+# one second, on any clock update (-1)    // (3) in the first three clock updates.
 makestep 0.1 -1
 ```
 
@@ -143,7 +140,7 @@ maxupdateskew 5.0
 rtcsync
 
 # Step the system clock instead of slewing it if the adjustment is larger than
-# 0.1 seconds, on any clock update.
+# one second, but only in the first three clock updates.
 makestep 0.1 -1
 
 # Get TAI-UTC offset and leap seconds from the system tz database.
@@ -161,3 +158,7 @@ The results are excellent!!
 We are now stable at 7.5ms with a nice even synchronization period!
 
 ![Drift Result Image2](https://raw.githubusercontent.com/lovelypool/cardano_stuff/master/drift4.png)
+
+
+In the future, I plan to add some more information about Grafana and Prometheus in this document.  It can be pretty powerful to get a 1000 foot view of overall system performance.  Here is a dashboard I came up with that includes both Jormungandr and Node Exporter data source data:
+![Dashboard Example](https://raw.githubusercontent.com/lovelypool/cardano_stuff/master/dashboard.png)
