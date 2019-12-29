@@ -17,6 +17,8 @@ https://gist.github.com/ilap/54027fe9af0513c2701dc556221198b2
 ### Quick Setup
 Note - you do not need to install the jormungandr datasource to tune your time synchronized drift.  You may ignore all jormungandr related information if all you want to do is experiment with time drift.  Adding the jormungandr datasource allows you to also monitor and log your node stats, such as uptime and block height, into a time series database for review in the future.
 
+You may also consider using @ilap's easy setup script that installs prometheus, grafana, and the jormungandr data sources for you automatically.  All you will need to do is install the Node Exporter data source after that to get time synchronized drift data. https://gist.github.com/ilap/930b1869ff32f79db1c3d4da2ebd96aa
+
 1. Your Prometheus YAML config file needs to include the following for the new "jormungandr" datasource, as well as the "node exporter" data source
 ```  
   - job_name: 'node_exporter'
