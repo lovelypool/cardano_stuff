@@ -192,3 +192,13 @@ We are now stable at 7.5ms with a nice even synchronization period!
 
 In the future, I plan to add some more information about Grafana and Prometheus in this document.  It can be pretty powerful to get a 1000 foot view of overall system performance.  Here is a dashboard I came up with that includes both Jormungandr and Node Exporter data source data:
 ![Dashboard Example](https://raw.githubusercontent.com/lovelypool/cardano_stuff/master/dashboard.png)
+
+## The New Modified Jormungandr monitor .py script!
+
+This modified script allows you to also grab your stake pool stats to start tracking your history, such as rewards earned, fees earned, value staked to you, etc... Prometheus will automatically track this information for you in a time series database as long as you have it running in the background.
+
+![Dashboard Example](https://raw.githubusercontent.com/lovelypool/cardano_stuff/master/newdash.jpg)
+
+If you want to use this dashboard for yourself, please make sure you have all the prerequisites talked about above.  You can import this JSON file to use the theme that I put together:
+
+https://github.com/lovelypool/cardano_stuff/blob/master/cardanodash.json
