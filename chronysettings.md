@@ -195,7 +195,7 @@ In the future, I plan to add some more information about Grafana and Prometheus 
 
 ## The New Modified Jormungandr monitor .py script!
 
-This modified script allows you to also grab your stake pool stats to start tracking your history, such as rewards earned, fees earned, value staked to you, etc... Prometheus will automatically track this information for you in a time series database as long as you have it running in the background.
+This modified script allows you to also grab your stake pool stats to start tracking your history, such as rewards earned, fees earned, value staked to you, etc... Prometheus will automatically track this information for you in a time series database as long as you have it running in the background.  The stakepool ID for LVLY is currently hard coded into the python code, so please change to your ID to grab your information.
 
 https://github.com/lovelypool/cardano_stuff/blob/master/monitor.py
 
