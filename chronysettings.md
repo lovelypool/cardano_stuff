@@ -7,7 +7,7 @@ https://gist.github.com/ilap/54027fe9af0513c2701dc556221198b2
 https://github.com/lovelypool/cardano_stuff/blob/master/chrony.conf
 
 ## Chrony only Tutorial
-The purpose of this section of the document is to instruct the reader on how to optimize settings for Chrony in order to reduce your system clock's time drift.  You do not need to install Prometheus or Grafana on your servers to perform this tweak. 
+Lets optimize our settings for Chrony in order to reduce your system clock's time drift!  You do not need to install Prometheus or Grafana on your servers to perform this tweak. 
 
 #### Install and Run Chrony:
 ```
