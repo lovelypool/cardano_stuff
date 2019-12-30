@@ -197,6 +197,8 @@ In the future, I plan to add some more information about Grafana and Prometheus 
 
 This modified script allows you to also grab your stake pool stats to start tracking your history, such as rewards earned, fees earned, value staked to you, etc... Prometheus will automatically track this information for you in a time series database as long as you have it running in the background.
 
+https://github.com/lovelypool/cardano_stuff/blob/master/monitor.py
+
 ![Dashboard Example](https://raw.githubusercontent.com/lovelypool/cardano_stuff/master/newdash.jpg)
 
 If you want to use this dashboard for yourself, please make sure you have all the prerequisites talked about above.  You can import this JSON file to use the theme that I put together:
