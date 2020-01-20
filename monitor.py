@@ -5,9 +5,20 @@ from prometheus_client import Summary
 from prometheus_client import start_http_server
 from dateutil.parser import parse
 import time, sys, warnings, os, traceback, subprocess, json
+import math, datetime
+import configparser as ConfigParser
+
+chainstartdate = 1576264417
+height=0
+heightold=0
+slotlatency=0
+lastslotdelta=0
+slotdelta=0
+heightdelta=0
+lastheightdelta=0
 
 EXPORTER_PORT = int(os.getenv('PORT', '8000'), 10)
-SLEEP_TIME = 10
+SLEEP_TIME = 1
 JORMUNGANDR_API = os.getenv('JORMUNGANDR_RESTAPI_URL',
                   os.getenv('JORMUNGANDR_API', 'http://127.0.0.1:3100/api'))
 os.environ['JORMUNGANDR_RESTAPI_URL'] = JORMUNGANDR_API
@@ -17,6 +28,10 @@ NODE_METRICS = [
     "value_taxed",
     "value_for_stakers",
     "thisepochstake",
+    "total_stake2",
+    "value_taxed2",
+    "value_for_stakers2",
+    "thisepochstake2",
     "blockRecvCnt",
     "lastBlockDate",
     "lastBlockFees",
@@ -29,7 +44,11 @@ NODE_METRICS = [
     "uptime",
     "connections",
     "lastBlockEpoch",
-    "lastBlockSlot"
+    "lastBlockSlot",
+    "currentslot",
+    "slotdelta",
+    "slotlatency",
+    "heightdelta"
 ]
 PIECE_METRICS = [
     "lastBlockHashPiece1",
@@ -81,10 +100,11 @@ JORMUNGANDR_METRICS_REQUEST_TIME = Summary(
 # Decorate function with metric.
 @JORMUNGANDR_METRICS_REQUEST_TIME.time()
 def process_jormungandr_metrics():
+
     # Process jcli returned metrics
     metrics = jcli_rest(['node', 'stats', 'get'])
 
-    metrics['connections'] = len(jcli_rest(['network', 'stats', 'get']))
+    metrics['connections'] = 0#len(jcli_rest(['network', 'stats', 'get']))
 
     try:
         metrics['lastBlockTime'] = parse(metrics['lastBlockTime']).timestamp()
@@ -104,7 +124,73 @@ def process_jormungandr_metrics():
     metrics['total_stake']=metrics2['total_stake']/1000000
     metrics['value_for_stakers']=metrics2['rewards']['value_for_stakers']/1000000
     metrics['value_taxed']=metrics2['rewards']['value_taxed']/1000000
+
+    # get stake pool metrics
+    metrics3 = jcli_rest(['stake-pool', 'get', 'a57ba451ea1af35bb07042640345d873b6076509536f71a2dcd23e5d4612174f'])
+    #print(metrics2['rewards']['value_for_stakers']/1000000)
+    metrics['total_stake2']=metrics3['total_stake']/1000000
+    metrics['value_for_stakers2']=metrics3['rewards']['value_for_stakers']/1000000
+    metrics['value_taxed2']=metrics3['rewards']['value_taxed']/1000000
+
+    try:
+       os.system('jcli rest v0 node stats get --host "http://127.0.0.1:3100/api" > nodestatsx')
+    except:
+        donothing=0
+            
+    fin = open("nodestatsx", "rt")
+    data = fin.read()
+    data = data.replace(': ', '= ')
+    data = data.replace('---', '[nodestats]')
+    fin.close()
+
+    fin = open("nodestatsx", "wt")
+    fin.write(data)
+    fin.close()
+
+    config = ConfigParser.ConfigParser()
+    config.read("nodestatsx")
+
+    global height
+    global heightold
+    global heightdelta
+    global lastheightdelta
+
+    heightold = height
+    height = config.get("nodestats", "lastBlockHeight")
+    height = height[1:]
+    height = height[:-1]
+    height = int(height)
+    heightdelta=height-heightold
+    if heightdelta == 0:
+        heightdelta=1
+    else:
+        donothing=0 
+
+    global slotlatency
+    global lastslotdelta
+    global slotdelta
+
+    #get time
+    nowtime = int(datetime.datetime.now().strftime("%s"))
+    chaintime = nowtime - chainstartdate
+    currentslot = int(math.floor((chaintime % 86400) / 2))
+    metrics['currentslot'] = currentslot
+    lastslot=float(metrics['lastBlockSlot'])
+    lastslotdelta=slotdelta
+    slotdelta=currentslot-lastslot
+    metrics['slotdelta']=slotdelta
     
+    if slotdelta < lastslotdelta:
+        slotlatency=slotdelta
+        metrics['slotlatency'] = slotlatency
+        lastheightdelta=heightdelta
+        metrics['heightdelta']=lastheightdelta
+    else:
+        metrics['slotlatency'] = slotlatency
+        metrics['heightdelta']=lastheightdelta
+
+
+
     try:
         epochstakecommand = "jcli rest v0 stake get --host " + "http://127.0.0.1:3100/api" + \
             " | grep -A 1 8c92fb7b01d78e9974d3a146ac144597303dc6419cf90062456deb8140e3a81b | sed -e 's/-//g' | sed -e 's/8c92fb7b01d78e9974d3a146ac144597303dc6419cf90062456deb8140e3a81b//g' | sed -r '/^\s*$/d' | awk '{$1=$1;print}' > thisepochstake"
@@ -120,6 +206,23 @@ def process_jormungandr_metrics():
         # get epoch number
         
     metrics['thisepochstake'] = thisepochstake
+
+    try:
+        epochstakecommand2 = "jcli rest v0 stake get --host " + "http://127.0.0.1:3100/api" + \
+            " | grep -A 1 a57ba451ea1af35bb07042640345d873b6076509536f71a2dcd23e5d4612174f | sed -e 's/-//g' | sed -e 's/a57ba451ea1af35bb07042640345d873b6076509536f71a2dcd23e5d4612174f//g' | sed -r '/^\s*$/d' | awk '{$1=$1;print}' > thisepochstake2"
+        os.system(epochstakecommand2)
+    except:
+        print("failed to grab current stake")
+        
+    with open('thisepochstake2') as f:
+        try:
+            thisepochstake2 = float(f.readline()) / 1000000
+        except:
+            thisepochstake2=0
+            print("something wrong, "), thisepochstake2
+        # get epoch number
+        
+    metrics['thisepochstake2'] = thisepochstake2
     
     for metric, gauge in jormungandr_metrics.items():
         gauge.set(sanitize(metrics[metric]))
